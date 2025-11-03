@@ -3,7 +3,7 @@ import { Users, CalendarRange, User } from 'lucide-react';
 import Input from '../common/Input';
 import Select from '../common/Select';
 import Button from '../common/Button';
-import { formatDate } from '../../utils/helpers';
+import { formatDate } from '../../utils/formatters';
 
 const CustomerForm = ({ customer, onSave, onCancel }) => {
   const [formData, setFormData] = useState({
@@ -21,7 +21,7 @@ const CustomerForm = ({ customer, onSave, onCancel }) => {
         Name: customer.Name || '',
         Email: customer.Email || '',
         Phone: customer.Phone || '',
-        DOB: customer.DOB ? formatDate(customer.DOB) : '',
+        DOB: customer.DOB ? new Date(customer.DOB).toISOString().split('T')[0] : '',
         Gender: customer.Gender || '',
       });
     }

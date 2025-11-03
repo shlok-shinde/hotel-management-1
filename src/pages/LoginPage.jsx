@@ -38,6 +38,8 @@ export default function LoginPage() {
       // Save token or user data if sent by backend
       localStorage.setItem('user', JSON.stringify(data.user || {}));
 
+      // Redirect to dashboard/home after login
+      navigate('/dashboard', { replace: true });
       // ✅ Navigate to dashboard/home after login
       navigate('/');
     } catch (err) {
@@ -47,6 +49,7 @@ export default function LoginPage() {
       setIsLoading(false);
     }
   };
+
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">

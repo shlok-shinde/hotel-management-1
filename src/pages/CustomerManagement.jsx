@@ -4,11 +4,33 @@ import Card from '../components/common/Card';
 import Button from '../components/common/Button';
 import Input from '../components/common/Input';
 import Select from '../components/common/Select';
+import Modal from '../components/common/Modal';
+import CustomerForm from '../components/forms/CustomerForm';
 
-const CustomerManagement = ({ customers = [], onEdit, onAdd, user }) => {
+const CustomerManagement = ({ customers = [], onEdit, user }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchType, setSearchType] = useState('Name');
   const [filter, setFilter] = useState({ term: '', type: 'Name' });
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
+
+  const handleAdd = () => {
+    setSelectedCustomer(null);
+    setIsModalOpen(true);
+  };
+
+  const handleEdit = (customer) => {
+    setSelectedCustomer(customer);
+    setIsModalOpen(true);
+  };
+
+  const handleSave = (customerData) => {
+    // Here you would typically call an API to save the customer
+    // For now, we'll just log the data and close the modal
+    console.log('Saving customer:', customerData);
+    setIsModalOpen(false);
+  };
+
 
   const handleSearch = () => {
     setFilter({ term: searchTerm, type: searchType });
@@ -74,9 +96,22 @@ const CustomerManagement = ({ customers = [], onEdit, onAdd, user }) => {
 
   return (
     <div className="space-y-6">
+      {isModalOpen && (
+        <Modal
+          title={selectedCustomer ? 'Edit Customer' : 'Add Customer'}
+          onClose={() => setIsModalOpen(false)}
+        >
+          <CustomerForm
+            customer={selectedCustomer}
+            onSave={handleSave}
+            onCancel={() => setIsModalOpen(false)}
+          />
+        </Modal>
+      )}
+
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <h2 className="text-3xl font-bold text-gray-900">Customer Management</h2>
-        <Button onClick={onAdd} variant="primary" icon={UserPlus}>
+        <Button onClick={handleAdd} variant="primary" icon={UserPlus}>
           New Customer
         </Button>
       </div>
@@ -213,7 +248,7 @@ const CustomerManagement = ({ customers = [], onEdit, onAdd, user }) => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <button
-                          onClick={() => onEdit && onEdit(customer)}
+                          onClick={() => handleEdit(customer)}
                           className="text-blue-600 hover:text-blue-900"
                           title="Edit customer"
                         >
@@ -233,7 +268,7 @@ const CustomerManagement = ({ customers = [], onEdit, onAdd, user }) => {
                     </p>
                     <div className="mt-6">
                       <Button
-                        onClick={onAdd}
+                        onClick={handleAdd}
                         variant="primary"
                         icon={UserPlus}
                         className="inline-flex items-center"

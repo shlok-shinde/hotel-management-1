@@ -4,20 +4,40 @@ import Card from '../components/common/Card';
 import Button from '../components/common/Button';
 import Input from '../components/common/Input';
 import Select from '../components/common/Select';
+import Modal from '../components/common/Modal';
+import BookingForm from '../components/forms/BookingForm';
 
 const BookingManagement = ({ 
   bookings = [], 
   customers = [], 
   rooms = [], 
-  onEdit = () => {}, 
   onDelete = () => {}, 
-  onAdd = () => {}, 
   user = {}
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchType, setSearchType] = useState('Guest');
   const [statusFilter, setStatusFilter] = useState('All');
   const [filter, setFilter] = useState({ term: '', type: 'Guest', status: 'All' });
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedBooking, setSelectedBooking] = useState(null);
+
+  const handleAdd = () => {
+    setSelectedBooking(null);
+    setIsModalOpen(true);
+  };
+
+  const handleEdit = (booking) => {
+    setSelectedBooking(booking);
+    setIsModalOpen(true);
+  };
+
+  const handleSave = (bookingData) => {
+    // Here you would typically call an API to save the booking
+    // For now, we'll just log the data and close the modal
+    console.log('Saving booking:', bookingData);
+    setIsModalOpen(false);
+  };
+
 
   const handleSearch = () => {
     setFilter({ term: searchTerm, type: searchType, status: statusFilter });
@@ -99,9 +119,24 @@ const BookingManagement = ({
 
   return (
     <div className="space-y-6">
+      {isModalOpen && (
+        <Modal
+          title={selectedBooking ? 'Edit Booking' : 'New Booking'}
+          onClose={() => setIsModalOpen(false)}
+        >
+          <BookingForm
+            booking={selectedBooking}
+            customers={customers}
+            rooms={rooms}
+            onSave={handleSave}
+            onCancel={() => setIsModalOpen(false)}
+          />
+        </Modal>
+      )}
+
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <h2 className="text-3xl font-bold text-gray-900">Booking Management</h2>
-        <Button onClick={onAdd} variant="primary" icon={Plus}>
+        <Button onClick={handleAdd} variant="primary" icon={Plus}>
           New Booking
         </Button>
       </div>
@@ -261,7 +296,7 @@ const BookingManagement = ({
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <div className="flex justify-end space-x-2">
                           <button
-                            onClick={() => onEdit(booking)}
+                            onClick={() => handleEdit(booking)}
                             className="text-blue-600 hover:text-blue-900"
                             title="Edit booking"
                           >

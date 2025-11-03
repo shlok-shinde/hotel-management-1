@@ -28,20 +28,20 @@ const BookingForm = ({
     if (booking) {
       setFormData({
         ...booking,
-        CheckInDate: booking.CheckInDate || '',
-        CheckOutDate: booking.CheckOutDate || '',
-        totalNights: booking.CheckInDate && booking.CheckOutDate 
-          ? calculateNights(booking.CheckInDate, booking.CheckOutDate) 
+        CheckInDate: booking.CheckInDate ? new Date(booking.CheckInDate).toISOString().split('T')[0] : '',
+        CheckOutDate: booking.CheckOutDate ? new Date(booking.CheckOutDate).toISOString().split('T')[0] : '',
+        totalNights: booking.CheckInDate && booking.CheckOutDate
+          ? calculateNights(booking.CheckInDate, booking.CheckOutDate)
           : 0
       });
     }
-  }, [booking]);
+  }, [booking, booking.CheckInDate, booking.CheckOutDate]);
 
   // Calculate total nights and amount when dates or room changes
   useEffect(() => {
     if (formData.CheckInDate && formData.CheckOutDate) {
       const nights = calculateNights(formData.CheckInDate, formData.CheckOutDate);
-      const selectedRoom = rooms.find(r => r.RoomID == formData.RoomID);
+      const selectedRoom = rooms.find(r => r.RoomID === parseInt(formData.RoomID));
       const amount = selectedRoom ? selectedRoom.PricePerNight * nights : 0;
       
       setFormData(prev => ({
@@ -66,7 +66,6 @@ const BookingForm = ({
       ...formData,
       RoomID: parseInt(formData.RoomID),
       CustomerID: parseInt(formData.CustomerID),
-      // Convert dates to ISO string and remove time part
       CheckInDate: formData.CheckInDate,
       CheckOutDate: formData.CheckOutDate,
     });

@@ -25,7 +25,7 @@ const DashboardStatCard = ({ title, value, icon: Icon, color, onClick, cta }) =>
   </Card>
 );
 
-const Dashboard = ({ bookings, rooms, customers, onNavigate }) => {
+const Dashboard = ({ bookings = [], rooms = [], customers = [], onNavigate = () => {} }) => {
   const stats = {
     activeBookings: bookings.filter(b => b.Status === 'Checked-In').length,
     pendingCheckIns: bookings.filter(b => 

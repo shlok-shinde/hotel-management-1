@@ -6,13 +6,13 @@ import Input from '../components/common/Input';
 import Select from '../components/common/Select';
 
 const BookingManagement = ({ 
-  bookings, 
-  customers, 
-  rooms, 
-  onEdit, 
-  onDelete, 
-  onAdd,
-  user 
+  bookings = [], 
+  customers = [], 
+  rooms = [], 
+  onEdit = () => {}, 
+  onDelete = () => {}, 
+  onAdd = () => {}, 
+  user = {}
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchType, setSearchType] = useState('Guest');

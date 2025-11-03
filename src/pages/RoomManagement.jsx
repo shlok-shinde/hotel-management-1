@@ -5,7 +5,11 @@ import Button from '../components/common/Button';
 import Input from '../components/common/Input';
 import Select from '../components/common/Select';
 
-const RoomManagement = ({ rooms, onStatusChange, user }) => {
+const RoomManagement = ({ 
+  rooms = [], 
+  onStatusChange = () => {}, 
+  user = {} 
+}) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [typeFilter, setTypeFilter] = useState('All');
